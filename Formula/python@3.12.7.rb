@@ -115,29 +115,22 @@ class PythonAT3127 < Formula
 
     # Get the SDK path
     sdk = MacOS.sdk_path_if_needed
-    
+
     # Combine SDK path with our optimization flags
     cflags = []
     cflags << "-isysroot #{sdk}" if sdk
-    cflags.concat %w[
-      -mcpu=apple-m1
-      -flto=thin
-      -ftree-vectorize
-      -fvectorize
-      -fslp-vectorize
-      -falign-functions=32
-      -fomit-frame-pointer
-    ]
+    cflags.push("-mcpu=apple-m1", "-flto=thin", "-ftree-vectorize", "-fvectorize", "-fslp-vectorize",
+"-falign-functions=32", "-fomit-frame-pointer")
 
     # Set SDKROOT and combined CFLAGS
     args << "SDKROOT=#{sdk}" if sdk
     args << "CFLAGS=#{cflags.join(" ")}"
 
     ENV["ax_cv_c_float_words_bigendian"] = "no"
-    
+
     system "./configure", *args
     system "make"
-    
+
     ENV.deparallelize do
       # The `altinstall` target prevents the installation of files with only Python's major
       # version in its name. This allows us to link multiple versioned Python formulae.
