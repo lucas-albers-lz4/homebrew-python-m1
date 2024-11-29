@@ -127,7 +127,6 @@ class PythonAT3127 < Formula
       -fslp-vectorize
       -falign-functions=32
       -fomit-frame-pointer
-      -ffast-math
     ]
 
     # Set SDKROOT and combined CFLAGS
