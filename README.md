@@ -3,7 +3,8 @@
 ## How do I install these formulae?
 
 `brew tap lucas-albers-lz4/python-m1;`
-`brew install lucas-albers-lz4/python-m1/python@3.12.7;`
+`brew install lucas-albers-lz4/python-m1/python@3.12;`
+`brew install lucas-albers-lz4/python-m1/python@3.13;`
 
 Or `brew tap lucas-albers-lz4/python-m1` and then `brew install <formula>`.
 
