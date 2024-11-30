@@ -143,9 +143,7 @@ class PythonAT313 < Formula
     cppflags       = ["-I#{HOMEBREW_PREFIX}/include"]
 
     if OS.mac?
-      if Hardware::CPU.arm?
-        cflags.push("-mcpu=apple-m1")
-      end
+      cflags.push("-mcpu=apple-m1") if Hardware::CPU.arm?
       # Enabling LTO on Linux makes libpython3.*.a unusable for anyone whose GCC
       # install does not match the one in CI _exactly_ (major and minor version).
       # https://github.com/orgs/Homebrew/discussions/3734

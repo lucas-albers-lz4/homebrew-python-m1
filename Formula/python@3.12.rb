@@ -136,10 +136,8 @@ class PythonAT312 < Formula
         # The setup.py looks at "-isysroot" to get the sysroot (and not at --sysroot)
         cflags  << "-isysroot #{MacOS.sdk_path}"
         ldflags << "-isysroot #{MacOS.sdk_path}"
-      end 
-      if Hardware::CPU.arm?
-      cflags.push("-mcpu=apple-m1")
       end
+      cflags.push("-mcpu=apple-m1") if Hardware::CPU.arm?
 
       # Enabling LTO on Linux makes libpython3.*.a unusable for anyone whose GCC
       # install does not match the one in CI _exactly_ (major and minor version).
