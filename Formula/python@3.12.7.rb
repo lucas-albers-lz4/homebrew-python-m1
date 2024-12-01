@@ -156,7 +156,7 @@ class PythonAT3127 < Formula
         cflags  << "-isysroot #{MacOS.sdk_path}"
         ldflags << "-isysroot #{MacOS.sdk_path}"
       end
-      cflags.push("-mcpu=apple-latest") if Hardware::CPU.arm?
+      cflags.push("-mcpu=apple-m3") if Hardware::CPU.arm?
 
       # Enabling LTO on Linux makes libpython3.*.a unusable for anyone whose GCC
       # install does not match the one in CI _exactly_ (major and minor version).
