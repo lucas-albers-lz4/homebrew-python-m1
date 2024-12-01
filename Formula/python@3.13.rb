@@ -5,12 +5,12 @@ class PythonAT313 < Formula
   sha256 "12445c7b3db3126c41190bfdc1c8239c39c719404e844babbd015a1bc3fafcd4"
   license "Python-2.0"
   revision 1
-  
+
   livecheck do
     url "https://www.python.org/ftp/python/"
     regex(%r{href=.*?v?(3\.13(?:\.\d+)*)/?["' >]}i)
   end
-  
+
   keg_only :versioned_formula, "this is an alternate version of Python 3.13"
   depends_on "pkg-config" => :build
   depends_on "mpdecimal"
