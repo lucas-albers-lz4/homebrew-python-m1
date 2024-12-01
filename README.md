@@ -28,7 +28,18 @@ Modified Homebrew formula for Python 3.12.7 specifically optimized for Apple Sil
       end
 ```
 
-### Compiler Flags Comparison
+### Apple currently supports these as of 2024 macos 15
+```bash
+for flag in apple-m1 apple-m2 apple-m3 apple-latest; do
+    clang -mcpu=$flag -c -x c /dev/null -o /dev/null && echo "$flag supported" || echo "$flag not supported"
+done
+apple-m1 supported
+apple-m2 supported
+clang: error: unsupported argument 'apple-m3' to option '-mcpu='
+apple-m3 not supported
+clang: error: unsupported argument 'apple-latest' to option '-mcpu='
+apple-latest not supported
+```
 
 #### Optimized Python
 ```bash
