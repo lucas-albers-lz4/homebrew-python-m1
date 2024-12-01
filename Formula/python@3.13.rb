@@ -6,6 +6,8 @@ class PythonAT313 < Formula
   license "Python-2.0"
   revision 1
 
+  keg_only :versioned_formula, "this is an alternate version of Python 3.13"
+
   livecheck do
     url "https://www.python.org/ftp/python/"
     regex(%r{href=.*?v?(3\.13(?:\.\d+)*)/?["' >]}i)
