@@ -35,9 +35,7 @@ for flag in apple-m1 apple-m2 apple-m3 apple-latest; do
 done
 apple-m1 supported
 apple-m2 supported
-clang: error: unsupported argument 'apple-m3' to option '-mcpu='
 apple-m3 not supported
-clang: error: unsupported argument 'apple-latest' to option '-mcpu='
 apple-latest not supported
 ```
 
