@@ -5,29 +5,29 @@ class PythonAT3130 < Formula
   sha256 "12445c7b3db3126c41190bfdc1c8239c39c719404e844babbd015a1bc3fafcd4"
   license "Python-2.0"
 
-  livecheck do
-    url "https://www.python.org/ftp/python/"
-    regex(%r{href=.*?v?(3\.13(?:\.\d+)*)/?["' >]}i)
-  end
-
   keg_only :versioned_formula
 
-  # conflicts_with "python@3.13", because: "both install Python 3.13 binaries"
+  #conflicts_with "python@3.13", because: "both install Python 3.13 binaries"
 
   def version
     "3.13.0"
   end
 
   def version_major
-    version.split(".")[0]
+    version.split('.')[0]
   end
 
   def version_minor
-    version.split(".")[1]
+    version.split('.')[1]
   end
 
   def version_major_minor
-    version.split(".")[0..1].join(".")
+    version.split('.')[0..1].join('.')
+  end
+
+  livecheck do
+    url "https://www.python.org/ftp/python/"
+    regex(%r{href=.*?v?(3\.13(?:\.\d+)*)/?["' >]}i)
   end
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -262,7 +262,7 @@ class PythonAT3130 < Formula
     end
 
     # Remove the site-packages that Python created in its Cellar.
-    rm_r(site_packages_cellar)
+    site_packages_cellar.rmtree
 
     # Prepare a wheel of wheel to install later.
     common_pip_args = %w[
