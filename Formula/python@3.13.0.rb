@@ -14,20 +14,15 @@ class PythonAT3130 < Formula
   end
 
   def version_major
-    version.split('.')[0]
+    version.split(".")[0]
   end
 
   def version_minor
-    version.split('.')[1]
+    version.split(".")[1]
   end
 
   def version_major_minor
-    version.split('.')[0..1].join('.')
-  end
-
-  livecheck do
-    url "https://www.python.org/ftp/python/"
-    regex(%r{href=.*?v?(3\.13(?:\.\d+)*)/?["' >]}i)
+    version.split(".")[0..1].join(".")
   end
 
   # setuptools remembers the build flags python is built with and uses them to
