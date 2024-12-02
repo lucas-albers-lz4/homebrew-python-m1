@@ -5,29 +5,29 @@ class PythonAT3127 < Formula
   sha256 "73ac8fe780227bf371add8373c3079f42a0dc62deff8d612cd15a618082ab623"
   license "Python-2.0"
 
+  livecheck do
+    url "https://www.python.org/ftp/python/"
+    regex(%r{href=.*?v?(3\.12(?:\.\d+)*)/?["' >]}i)
+  end
+
   keg_only :versioned_formula
 
-  #conflicts_with "python@3.12", because: "both install Python 3.12 binaries"
+  # conflicts_with "python@3.12", because: "both install Python 3.12 binaries"
 
   def version
     "3.12.7"
   end
 
   def version_major
-    version.split('.')[0]
+    version.split(".")[0]
   end
 
   def version_minor
-    version.split('.')[1]
+    version.split(".")[1]
   end
 
   def version_major_minor
-    version.split('.')[0..1].join('.')
-  end
-
-  livecheck do
-    url "https://www.python.org/ftp/python/"
-    regex(%r{href=.*?v?(3\.12(?:\.\d+)*)/?["' >]}i)
+    version.split(".")[0..1].join(".")
   end
 
   # setuptools remembers the build flags python is built with and uses them to
