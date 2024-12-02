@@ -1,33 +1,33 @@
-class PythonAT3127 < Formula
+class PythonAT3130 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.12.7/Python-3.12.7.tgz"
-  sha256 "73ac8fe780227bf371add8373c3079f42a0dc62deff8d612cd15a618082ab623"
+  url "https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tgz"
+  sha256 "12445c7b3db3126c41190bfdc1c8239c39c719404e844babbd015a1bc3fafcd4"
   license "Python-2.0"
-
-  livecheck do
-    url "https://www.python.org/ftp/python/"
-    regex(%r{href=.*?v?(3\.12(?:\.\d+)*)/?["' >]}i)
-  end
 
   keg_only :versioned_formula
 
-  # conflicts_with "python@3.12", because: "both install Python 3.12 binaries"
+  #conflicts_with "python@3.13", because: "both install Python 3.13 binaries"
 
   def version
-    "3.12.7"
+    "3.13.0"
   end
 
   def version_major
-    version.split(".")[0]
+    version.split('.')[0]
   end
 
   def version_minor
-    version.split(".")[1]
+    version.split('.')[1]
   end
 
   def version_major_minor
-    version.split(".")[0..1].join(".")
+    version.split('.')[0..1].join('.')
+  end
+
+  livecheck do
+    url "https://www.python.org/ftp/python/"
+    regex(%r{href=.*?v?(3\.13(?:\.\d+)*)/?["' >]}i)
   end
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -259,13 +259,10 @@ class PythonAT3127 < Formula
       inreplace bin/"python#{version_major_minor}-config",
                 'prefix_real=$(installed_prefix "$0")',
                 "prefix_real=#{opt_prefix}"
-
-      # Remove symlinks that conflict with the main Python formula.
-      rm lib/"libpython3.so"
     end
 
     # Remove the site-packages that Python created in its Cellar.
-    rm_r(site_packages_cellar)
+    site_packages_cellar.rmtree
 
     # Prepare a wheel of wheel to install later.
     common_pip_args = %w[
@@ -277,20 +274,19 @@ class PythonAT3127 < Formula
     ]
     whl_build = buildpath/"whl_build"
     system python3, "-m", "venv", whl_build
-    %w[flit-core wheel setuptools].each do |r|
-      resource(r).stage do
-        system whl_build/"bin/pip3", "install", *common_pip_args, "."
-      end
+    resource("flit-core").stage do
+      system whl_build/"bin/pip3", "install", *common_pip_args, "."
     end
     resource("wheel").stage do
+      system whl_build/"bin/pip3", "install", *common_pip_args, "."
       system whl_build/"bin/pip3", "wheel", *common_pip_args,
                                             "--wheel-dir=#{libexec}",
                                             "."
     end
 
-    # Replace bundled pip with our own.
-    rm lib_cellar.glob("ensurepip/_bundled/pip-*.whl")
-    %w[pip].each do |r|
+    # Replace bundled setuptools/pip with our own.
+    rm lib_cellar.glob("ensurepip/_bundled/{setuptools,pip}-*.whl")
+    %w[setuptools pip].each do |r|
       resource(r).stage do
         system whl_build/"bin/pip3", "wheel", *common_pip_args,
                                               "--wheel-dir=#{lib_cellar}/ensurepip/_bundled",
