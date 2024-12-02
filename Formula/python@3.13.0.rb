@@ -156,20 +156,7 @@ class PythonAT3130 < Formula
         cflags  << "-isysroot #{MacOS.sdk_path}"
         ldflags << "-isysroot #{MacOS.sdk_path}"
       end
-
-      # Set appropriate CPU flags for Apple Silicon
-      if Hardware::CPU.arm?
-        cpu_brand = `sysctl -n machdep.cpu.brand_string`.strip
-        cflags << case cpu_brand
-        when /Apple M1/
-          "-mcpu=apple-m1"
-        when /Apple M[2-4]/  # Handle M2 through M4
-          "-mcpu=apple-m2"   # M2 architecture works for M2 and newer
-        else
-          "-mcpu=apple-m1"   # Fallback for unknown variants
-        end
-        ohai "CPU Detection", "Found #{cpu_brand}, using #{cflags.last}"  # Debug info during build
-      end
+      cflags.push("-mcpu=apple-m2") if Hardware::CPU.arm?
 
       # Enabling LTO on Linux makes libpython3.*.a unusable for anyone whose GCC
       # install does not match the one in CI _exactly_ (major and minor version).
