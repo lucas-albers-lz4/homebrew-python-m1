@@ -136,22 +136,28 @@ check_divergence() {
 main() {
     local command="${1:-setup}"
     
-    case "$command" in
+    case "${command}" in
         "setup")
-            setup_taps && 
-            download_formulas && 
-            extract_versions &&
-            brew untap "${TEMP_TAP}" &&
+            setup_taps
+            if ! download_formulas; then
+                exit 1
+            fi
+            if ! extract_versions; then
+                exit 1
+            fi
+            if ! brew untap "${TEMP_TAP}"; then
+                exit 1
+            fi
             log_success "Setup completed successfully"
             ;;
         "check")
             check_divergence
             ;;
         *)
-            echo "Usage: $0 [setup|check]"
+            echo "Usage: ${0} [setup|check]"
             exit 1
             ;;
     esac
 }
 
-main "$@"
+main "${@}"
