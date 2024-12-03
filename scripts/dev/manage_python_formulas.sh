@@ -18,7 +18,7 @@ PYTHON_VERSIONS=(
 )
 
 # Tap configuration
-UPSTREAM_TAP="homebrew/core"          # Source of Python formulas
+export UPSTREAM_TAP="homebrew/core"            # Source of Python formulas
 LOCAL_TAP="lucas-albers-lz4/python-m1"  # Our local tap for M1-optimized versions
 TEMP_TAP="lucas-albers-lz4/python-temp" # Temporary tap for formula processing
 
@@ -28,7 +28,6 @@ log_success() { echo -e "${GREEN}SUCCESS: $1${NC}"; }
 log_info() { echo -e "${YELLOW}INFO: $1${NC}"; }
 
 # Sets up clean homebrew taps for formula management
-# Removes existing taps and creates fresh ones
 setup_taps() {
     log_info "Setting up taps..."
     brew untap "${LOCAL_TAP}" 2>/dev/null || true
@@ -42,9 +41,9 @@ setup_taps() {
 }
 
 # Downloads Python formulas from homebrew-core
-# Validates formula content and initializes git repository
 download_formulas() {
-    local temp_path=$(brew --repository "${TEMP_TAP}")/Formula
+    local temp_path
+    temp_path="$(brew --repository "${TEMP_TAP}")/Formula"
     
     for version_pair in "${PYTHON_VERSIONS[@]}"; do
         local short_version="${version_pair%%:*}"
@@ -54,8 +53,8 @@ download_formulas() {
         log_info "Downloading Python ${short_version} formula from: ${url}"
         
         # HTTP request with status code validation
-        local http_response=$(curl -s -w "%{http_code}" -o "${formula_file}" "${url}")
-        if [ $? -ne 0 ] || [ "${http_response}" != "200" ]; then
+        local http_response
+        if ! http_response=$(curl -s -w "%{http_code}" -o "${formula_file}" "${url}") || [[ "${http_response}" != "200" ]]; then
             log_error "Failed to download Python ${short_version} formula"
             log_error "URL: ${url}"
             log_error "HTTP Status: ${http_response}"
@@ -74,13 +73,14 @@ download_formulas() {
     done
     
     # Initialize git repository for version tracking
-    cd "$(brew --repository ${TEMP_TAP})"
+    local repo_path
+    repo_path="$(brew --repository "${TEMP_TAP}")"
+    cd "${repo_path}" || exit 1
     git add Formula/python@3.*.rb
     git commit -m "Add Python formulas"
 }
 
 # Extracts specific Python versions from formulas
-# Creates versioned formulas in the local tap
 extract_versions() {
     for version_pair in "${PYTHON_VERSIONS[@]}"; do
         local short_version="${version_pair%%:*}"
@@ -95,9 +95,9 @@ extract_versions() {
 }
 
 # Checks for divergence between local and upstream formulas
-# Useful for tracking changes and updates needed
 check_divergence() {
-    local main_tap_path=$(brew --repository "${LOCAL_TAP}")
+    local main_tap_path
+    main_tap_path="$(brew --repository "${LOCAL_TAP}")"
     
     for version_pair in "${PYTHON_VERSIONS[@]}"; do
         local short_version="${version_pair%%:*}"
@@ -117,9 +117,10 @@ check_divergence() {
         
         # Compare with local installed version
         local cellar_path="/opt/homebrew/Cellar/python@${short_version}/${full_version}*/.brew/python@${short_version}.rb"
-        local local_formula=$(ls ${cellar_path} 2>/dev/null | head -n 1)
+        local local_formula
+        local_formula=$(find "${cellar_path}" -type f 2>/dev/null | head -n 1)
         
-        if [ -f "${local_formula}" ]; then
+        if [[ -f "${local_formula}" ]]; then
             log_info "Copying local formula for Python ${short_version}..."
             cp "${local_formula}" "${output_dir}/local_${homebrew_formula}.rb"
             log_success "Downloaded both versions for Python ${short_version}"
