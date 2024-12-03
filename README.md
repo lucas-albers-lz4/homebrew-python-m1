@@ -58,7 +58,7 @@ Modified Homebrew formula for Python 3.12.7 specifically optimized for Apple Sil
       end
 ```
 
-### Apple currently supports cpu's in clang these as of 2024 macos 15
+### Apple currently supports cpu m1 and m2 processor's directly as of 2024
 ```bash
 for flag in apple-m1 apple-m2 apple-m3 apple-latest; do
     clang -mcpu=$flag -c -x c /dev/null -o /dev/null && echo "$flag supported" || echo "$flag not supported"
@@ -68,12 +68,7 @@ apple-m2 supported
 
 ```
 
-#### Optimized Python
-```bash
--mcpu=apple-m1
-```
-
-### Important Notes
+### Notes
 ⚠️ This formula is specifically for Apple Silicon Macs.
 
 ⚠️ Known Test Failures (same as stock Python):
