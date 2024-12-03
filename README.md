@@ -1,5 +1,3 @@
-# Lucas-albers-lz4 Python-m1
-
 ## How do I install these formulae?
 
 `brew tap lucas-albers-lz4/python-m1`
